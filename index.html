@@ -27,9 +27,6 @@
 <ol id="output"></ol>
 <script type="text/javascript" src="jquery-3.2.1.min.js"></script>
 <script type="text/javascript">
-    var folder = 'appimg';
-
-
     // 必须阻止dragenter和dragover事件的默认行为，这样才能触发 drop 事件
     function handleFileSelect(evt) {
         evt.stopPropagation();
@@ -54,7 +51,6 @@
                     method: 'POST',
                     url: './upload.php',
                     data: {
-                        'folder': folder,
                         'filedata': arg.target.result
                     },
                     dataType: 'json',
