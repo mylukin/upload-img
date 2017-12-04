@@ -47,7 +47,6 @@
         var length = files.length;
         console.log(length);
 
-
         // 处理多文件
         for (var i = 0, f; f = files[i]; i++) {
             (function (f) {
@@ -87,12 +86,12 @@
                     });
                 };
             })(f);
-
         }
-        setInterval(function () {
+        var setInterval = setInterval(function () {
             console.log(length);
             if (length <= 0) {
                 $('#drop_zone').text('Drop files here');
+                clearInterval(setInterval);
             } else {
                 $('#drop_zone').text('Upload...');
             }
