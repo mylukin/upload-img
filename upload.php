@@ -45,7 +45,7 @@ if (isset($_POST['filedata'])) {
 $accessKeyId = "LTAItYZgeQvwSThi";
 $accessKeySecret = "tFtDfNRuDEKJRskikVRTtpNaclS1PL";
 $endpoint = "oss-cn-hangzhou.aliyuncs.com";
-$folder = isset($_POST['folder']) ? $_POST['folder'] : '';
+$folder = file_get_contents(__DIR__.'/.path');
 try {
     $ossClient = new OssClient($accessKeyId, $accessKeySecret, $endpoint);
     $bucket = "mogo-static-files";
