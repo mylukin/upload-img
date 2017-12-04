@@ -45,7 +45,7 @@
                 console.log('f', f);
                 var file_type = f.type;
                 var file_size = f.size;
-                var file_name = escape(f.name);
+                var file_name = f.name.replace(/</g,'&lt;').replace(/>/g,'&gt;');
                 // ajax 上传
                 var reader = new FileReader();
                 reader.readAsDataURL(f);
