@@ -7,8 +7,8 @@
  */
 include __DIR__ . '/vendor/autoload.php';
 
-use OSS\OSSClient;
-use OSS\Core\OSSException;
+use \OSS\OSSClient;
+use \OSS\Core\OSSException;
 
 $response = [
     'status' => 'ok',
