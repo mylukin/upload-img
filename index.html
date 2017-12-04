@@ -87,11 +87,11 @@
                 };
             })(f);
         }
-        var setInterval = setInterval(function () {
+        var objInterval = setInterval(function () {
             console.log(length);
             if (length <= 0) {
                 $('#drop_zone').text('Drop files here');
-                clearInterval(setInterval);
+                clearInterval(objInterval);
             } else {
                 $('#drop_zone').text('Upload...');
             }
