@@ -41,37 +41,44 @@
 
         // 处理多文件
         for (var i = 0, f; f = files[i]; i++) {
-            console.log('f', f);
-            // ajax 上传
-            var reader = new FileReader();
-            reader.readAsDataURL(f);
-            // 渲染文件
-            reader.onload = function (arg) {
-                console.log('arg', arg);
-                $.ajax({
-                    method: 'POST',
-                    url: './upload.php',
-                    data: {
-                        'filedata': arg.target.result
-                    },
-                    dataType: 'json',
-                    success: function (resp) {
-                        console.log('resp', resp);
-                        if (resp.status == 'ok') {
-                            var imgurl = 'https://assets.mgzf.com/' + resp.path;
-                            console.log(imgurl);
-                            var file_type = resp.data['oss-requestheaders']['Content-Type'];
-                            var file_size = resp.data['oss-requestheaders']['Content-Length'];
-                            $('#output').append('<li><strong>' + imgurl + '</strong> (' + (file_type || 'n/a') + ') - ' + (file_size / 1000).toFixed(2) + ' K</li>');
-                        } else {
-                            $('#output').append('<li><strong>' + resp.message + '</strong></li>');
+            (function (f) {
+                console.log('f', f);
+                var file_type = f.type;
+                var file_size = f.size;
+                var file_name = escape(f.name);
+                // ajax 上传
+                var reader = new FileReader();
+                reader.readAsDataURL(f);
+                // 渲染文件
+                reader.onload = function (arg) {
+                    console.log('arg', arg);
+                    $.ajax({
+                        method: 'POST',
+                        url: './upload.php',
+                        data: {
+                            'filedata': arg.target.result
+                        },
+                        dataType: 'json',
+                        success: function (resp) {
+                            console.log('resp', resp);
+                            if (resp.status == 'ok') {
+                                var imgurl = 'https://assets.mgzf.com/' + resp.path;
+                                console.log(imgurl);
+                                $('#output').append('<li><strong>' + imgurl + '</strong> (' + (file_type || 'n/a') + ') - ' + (file_size / 1000).toFixed(2) + ' K</li>');
+                            } else {
+                                $('#output').append('<li><strong style="color: red">' + file_name + ': ' + resp.message + '</strong> (' + (file_type || 'n/a') + ') - ' + (file_size / 1000).toFixed(2) + ' K</li>');
+                            }
+                        },
+                        error: function (xhr, status, message) {
+                            $('#output').append('<li><strong style="color: red">' + file_name + ': ' + message + '</strong> (' + (file_type || 'n/a') + ') - ' + (file_size / 1000).toFixed(2) + ' K</li>');
+                        },
+                        complete: function () {
+                            length--;
                         }
-                    },
-                    complete: function () {
-                        length--;
-                    }
-                });
-            };
+                    });
+                };
+            })(f);
+
         }
         setInterval(function () {
             console.log(length);
