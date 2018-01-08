@@ -23,7 +23,7 @@
     </style>
 </head>
 <body>
-<div id="drop_zone">把任意格式图片拖到这里，最大1M</div>
+<div id="drop_zone">把文件拖到这里</div>
 <ol id="output"></ol>
 <script type="text/javascript" src="jquery-3.2.1.min.js"></script>
 <script type="text/javascript">
@@ -93,7 +93,7 @@
         var objInterval = setInterval(function () {
             console.log(length);
             if (length <= 0) {
-                $('#drop_zone').text('把任意格式图片拖到这里，最大1M');
+                $('#drop_zone').text('把文件拖到这里');
                 clearInterval(objInterval);
             } else {
                 $('#drop_zone').text('上传中...');
