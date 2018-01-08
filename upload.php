@@ -30,7 +30,7 @@ if (isset($_POST['filedata'])) {
         $manager = new ImageManager(array('driver' => 'imagick'));
         $manager->make($file_data)->save($file_path,90);
         $file_data = file_get_contents($file_path);
-
+        $file_name = md5($file_data);
     } else {
         $response = [
             'status' => 'err',
