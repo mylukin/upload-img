@@ -59,7 +59,7 @@ if (isset($_POST['filedata'])) {
             @unlink($file_path);
         }
         // android包文件名不变
-        if ($file_ext == 'apk') {
+        if ($file_ext == 'apk' || $file_ext == 'json') {
             $file_name = basename($src_file_name, '.' . $file_ext);
         }
 
