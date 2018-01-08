@@ -90,10 +90,10 @@
         var objInterval = setInterval(function () {
             console.log(length);
             if (length <= 0) {
-                $('#drop_zone').text('Drop files here');
+                $('#drop_zone').text('把文件拖到这里，最大1M');
                 clearInterval(objInterval);
             } else {
-                $('#drop_zone').text('Upload...');
+                $('#drop_zone').text('上传中...');
             }
         }, 1000);
     }
