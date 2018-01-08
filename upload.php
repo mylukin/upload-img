@@ -7,6 +7,8 @@
  */
 include __DIR__ . '/vendor/autoload.php';
 
+include __DIR__.'/config.php';
+
 use \OSS\OssClient;
 use \OSS\Core\OssException;
 use Intervention\Image\ImageManager;
@@ -22,15 +24,27 @@ if (isset($_POST['filedata'])) {
     $file_data_arr = explode(',', $file_data);
     $file_type = $file_data_arr[0];
     $file_data = $file_data_arr[1];
-    if (preg_match('@data:image\/(\w+);base64@i', $file_type, $args)) {
+    if (preg_match('@data:' . preg_quote($allow_type, '@') . '(\w+);base64@i', $file_type, $args)) {
         $file_ext = $args[1];
         $file_data = base64_decode($file_data);
         $file_name = md5($file_data);
-        $file_path = sprintf('/tmp/%s_zip.%s', $file_name, $file_ext);
-        $manager = new ImageManager(array('driver' => 'imagick'));
-        $manager->make($file_data)->save($file_path,90);
-        $file_data = file_get_contents($file_path);
-        $file_name = md5($file_data);
+        if ($allow_type == 'image/') {
+            $file_path = sprintf('/tmp/%s_zip.%s', $file_name, $file_ext);
+            $manager = new ImageManager(array('driver' => 'imagick'));
+            $manager->make($file_data)->save($file_path, 90);
+            $file_data = file_get_contents($file_path);
+            $file_name = md5($file_data);
+            @unlink($file_path);
+        }
+        if (strlen($file_data) > $allow_size) {
+            $response = [
+                'status' => 'err',
+                'message' => '不允许上传大于' . nice_number($allow_size) . '的文件',
+            ];
+            echo json_encode($response);
+            exit;
+        }
+
     } else {
         $response = [
             'status' => 'err',
@@ -53,7 +67,7 @@ if (isset($_POST['filedata'])) {
 $accessKeyId = "LTAItYZgeQvwSThi";
 $accessKeySecret = "tFtDfNRuDEKJRskikVRTtpNaclS1PL";
 $endpoint = "oss-cn-hangzhou.aliyuncs.com";
-$folder = trim(file_get_contents(__DIR__ . '/.path'));
+$folder = trim($up_folder);
 try {
     $ossClient = new OssClient($accessKeyId, $accessKeySecret, $endpoint);
     $bucket = "mogo-static-files";
@@ -83,3 +97,27 @@ try {
 
 
 echo json_encode($response);
+
+
+/**
+ * 漂亮的数字
+ *
+ * @param $n
+ * @return bool|string
+ */
+function nice_number($n)
+{
+    // first strip any formatting;
+    $n = (0 + str_replace(",", "", $n));
+
+    // is this a number?
+    if (!is_numeric($n)) return false;
+
+    // now filter it;
+    if ($n > 1000000000000) return round(($n / 1000000000000), 1) . 'T';
+    else if ($n > 1000000000) return round(($n / 1000000000), 1) . 'B';
+    else if ($n > 1000000) return round(($n / 1000000), 1) . 'M';
+    else if ($n > 1000) return round(($n / 1000), 1) . 'K';
+
+    return number_format($n);
+}
