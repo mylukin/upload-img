@@ -9,12 +9,14 @@ include __DIR__ . '/vendor/autoload.php';
 
 use \OSS\OssClient;
 use \OSS\Core\OssException;
+use Intervention\Image\ImageManager;
 
 $response = [
     'status' => 'ok',
 ];
 header('Content-Type: application/json');
 
+$file_name = '';
 if (isset($_POST['filedata'])) {
     $file_data = $_POST['filedata'];
     $file_data_arr = explode(',', $file_data);
@@ -23,6 +25,12 @@ if (isset($_POST['filedata'])) {
     if (preg_match('@data:image\/(\w+);base64@i', $file_type, $args)) {
         $file_ext = $args[1];
         $file_data = base64_decode($file_data);
+        $file_name = md5($file_data);
+        $file_path = sprintf('/tmp/%s_zip.%s', $file_name, $file_ext);
+        $manager = new ImageManager(array('driver' => 'imagick'));
+        $manager->make($file_data)->save($file_path,90);
+        $file_data = file_get_contents($file_path);
+
     } else {
         $response = [
             'status' => 'err',
@@ -45,11 +53,11 @@ if (isset($_POST['filedata'])) {
 $accessKeyId = "LTAItYZgeQvwSThi";
 $accessKeySecret = "tFtDfNRuDEKJRskikVRTtpNaclS1PL";
 $endpoint = "oss-cn-hangzhou.aliyuncs.com";
-$folder = trim(file_get_contents(__DIR__.'/.path'));
+$folder = trim(file_get_contents(__DIR__ . '/.path'));
 try {
     $ossClient = new OssClient($accessKeyId, $accessKeySecret, $endpoint);
     $bucket = "mogo-static-files";
-    $object = sprintf('%s/%s.%s', $folder, md5($file_data), $file_ext);
+    $object = sprintf('%s/%s.%s', $folder, $file_name, $file_ext);
     $content = $file_data;
     try {
         $file_info = $ossClient->putObject($bucket, $object, $content);

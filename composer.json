@@ -1,5 +1,15 @@
 {
     "require": {
-        "aliyuncs/oss-sdk-php": "~2.0"
-    }
+        "aliyuncs/oss-sdk-php": "~2.0",
+        "intervention/image": "^2.4"
+    },
+    "repositories": [
+        {
+            "packagist": false
+        },
+        {
+            "type": "composer",
+            "url": "https://packagist.phpcomposer.com"
+        }
+    ]
 }
