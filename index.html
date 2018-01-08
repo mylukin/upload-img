@@ -64,6 +64,7 @@
                         method: 'POST',
                         url: './upload.php',
                         data: {
+                            'file_name': file_name,
                             'filedata': arg.target.result
                         },
                         dataType: 'json',

@@ -38,10 +38,11 @@ header('Content-Type: application/json');
 $file_name = '';
 if (isset($_POST['filedata'])) {
     $file_data = $_POST['filedata'];
+    $src_file_name = $_POST['file_name'];
     $file_data_arr = explode(',', $file_data);
     $file_type = $file_data_arr[0];
     $file_data = $file_data_arr[1];
-    if (preg_match('@data:' . preg_quote($allow_type, '@') . '(\w+);base64@i', $file_type, $args)) {
+    if (preg_match('@data:' . preg_quote($allow_type, '@') . '([\w\.\-]+);base64@i', $file_type, $args)) {
         $file_ext = $args[1];
         if (isset($file_types[$file_ext])) {
             $file_ext = $file_types[$file_ext];
@@ -57,6 +58,11 @@ if (isset($_POST['filedata'])) {
             $file_name = md5($file_data);
             @unlink($file_path);
         }
+
+        if ($file_ext == 'apk') {
+            //$file_name = md5($file_data);
+        }
+
         if (strlen($file_data) > $allow_size) {
             $response = [
                 'status' => 'err',
