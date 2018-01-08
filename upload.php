@@ -60,7 +60,7 @@ if (isset($_POST['filedata'])) {
         }
         // android包文件名不变
         if ($file_ext == 'apk') {
-            $file_name = $src_file_name;
+            $file_name = basename($src_file_name, '.' . $file_ext);
         }
 
         if (strlen($file_data) > $allow_size) {
