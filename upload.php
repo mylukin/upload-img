@@ -58,9 +58,9 @@ if (isset($_POST['filedata'])) {
             $file_name = md5($file_data);
             @unlink($file_path);
         }
-
+        // android包文件名不变
         if ($file_ext == 'apk') {
-            //$file_name = md5($file_data);
+            $file_name = $src_file_name;
         }
 
         if (strlen($file_data) > $allow_size) {
