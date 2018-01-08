@@ -26,7 +26,7 @@ if (isset($_POST['filedata'])) {
     } else {
         $response = [
             'status' => 'err',
-            'message' => '不支持 '.$file_type.' 文件上传',
+            'message' => '不允许上传此类文件',
         ];
         echo json_encode($response);
         exit;
