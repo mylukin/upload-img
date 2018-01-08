@@ -70,7 +70,8 @@ if (isset($_POST['filedata'])) {
     } else {
         $response = [
             'status' => 'err',
-            'message' => '不允许上传此类文件',
+            'message' => '不允许上传此类文件' . $file_type,
+            'size_upload' => strlen($file_data)
         ];
         echo json_encode($response);
         exit;
