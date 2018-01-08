@@ -7,7 +7,24 @@
  */
 include __DIR__ . '/vendor/autoload.php';
 
-include __DIR__.'/config.php';
+include __DIR__ . '/config.php';
+
+
+if (!isset($allow_type)) {
+    $allow_type = 'image/';
+}
+
+if (!isset($allow_size)) {
+    $allow_size = 1 * 1024 * 1024;
+}
+
+if (!isset($up_folder)) {
+    $up_folder = '';
+}
+
+if (!isset($file_types)) {
+    $file_types = [];
+}
 
 use \OSS\OssClient;
 use \OSS\Core\OssException;
@@ -26,6 +43,10 @@ if (isset($_POST['filedata'])) {
     $file_data = $file_data_arr[1];
     if (preg_match('@data:' . preg_quote($allow_type, '@') . '(\w+);base64@i', $file_type, $args)) {
         $file_ext = $args[1];
+        if (isset($file_types[$file_ext])) {
+            $file_ext = $file_types[$file_ext];
+        }
+
         $file_data = base64_decode($file_data);
         $file_name = md5($file_data);
         if ($allow_type == 'image/') {
