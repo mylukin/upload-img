@@ -75,10 +75,10 @@
                                 file_size = nice_number(resp.data.info.size_upload);
                                 var imgurl = 'https://assets.mgzf.com/' + resp.path;
                                 console.log(imgurl);
-                                $('#output').append('<li><strong>' + imgurl + '</strong> (' + (file_type || 'n/a') + ') - ' + file_size + '</li>');
+                                $('#output').append('<li><strong>' + imgurl + '</strong> (' + (file_type || resp.file_type) + ') - ' + file_size + '</li>');
                             } else {
                                 file_size = nice_number(resp.size_upload);
-                                $('#output').append('<li><strong style="color: red">' + file_name + ': ' + resp.message + '</strong> (' + (file_type || 'n/a') + ') - ' + file_size + '</li>');
+                                $('#output').append('<li><strong style="color: red">' + file_name + ': ' + resp.message + '</strong> (' + (file_type || resp.file_type) + ') - ' + file_size + '</li>');
                             }
                         },
                         error: function (xhr, status, message) {

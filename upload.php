@@ -75,7 +75,8 @@ if (isset($_POST['filedata'])) {
             $response = [
                 'status' => 'err',
                 'message' => '不允许上传大于' . nice_number($allow_size) . '的文件',
-                'size_upload' => strlen($file_data)
+                'size_upload' => strlen($file_data),
+                'file_type' => $file_ext,
             ];
             echo json_encode($response);
             exit;
@@ -85,6 +86,7 @@ if (isset($_POST['filedata'])) {
         $response = [
             'status' => 'err',
             'message' => '不允许上传此类文件',
+            'file_type' => $src_file_ext,
             'size_upload' => strlen($file_data)
         ];
         echo json_encode($response);
