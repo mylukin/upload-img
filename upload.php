@@ -39,14 +39,22 @@ $file_name = '';
 if (isset($_POST['filedata'])) {
     $file_data = $_POST['filedata'];
     $src_file_name = $_POST['file_name'];
+    $src_file_ext = pathinfo($src_file_name, PATHINFO_EXTENSION);
     $file_data_arr = explode(',', $file_data);
     $file_type = $file_data_arr[0];
     $file_data = $file_data_arr[1];
-    if (preg_match('@data:' . preg_quote($allow_type, '@') . '([\w\.\-]+);base64@i', $file_type, $args)) {
-        $file_ext = $args[1];
-        if (isset($file_types[$file_ext])) {
-            $file_ext = $file_types[$file_ext];
+    if (preg_match('@data:' . preg_quote($allow_type, '@') . '([\w\.\-]+);base64@i', $file_type, $args) || isset($file_types[$src_file_ext])) {
+        if (isset($args[1])) {
+            $file_ext = $args[1];
+            if (isset($file_types[$file_ext])) {
+                $file_ext = $file_types[$file_ext];
+            }
+        } elseif (isset($file_types[$src_file_ext])) {
+            $file_ext = $src_file_ext;
+        } else {
+            $file_ext = '';
         }
+
 
         $file_data = base64_decode($file_data);
         $file_name = md5($file_data);
@@ -76,7 +84,7 @@ if (isset($_POST['filedata'])) {
     } else {
         $response = [
             'status' => 'err',
-            'message' => '不允许上传此类文件:'.$file_type,
+            'message' => '不允许上传此类文件',
             'size_upload' => strlen($file_data)
         ];
         echo json_encode($response);

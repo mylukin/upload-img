@@ -14,5 +14,6 @@ $allow_size = 1 * 1024 * 1024;
 $up_folder = 'appimg';
 // 文件类型对应的扩展名
 $file_types = [
-    'vnd.android.package-archive' => 'apk'
+    'vnd.android.package-archive' => 'apk',
+    'apk' => true,
 ];
