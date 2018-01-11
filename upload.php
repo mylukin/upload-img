@@ -116,6 +116,7 @@ try {
         $file_info = $ossClient->putObject($bucket, $object, $content);
         $response['data'] = $file_info;
         $response['path'] = $object;
+        $response['file_type'] = $src_file_ext;
 
     } catch (OssException $e) {
         $response = [
