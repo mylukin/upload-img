@@ -26,8 +26,6 @@ if (!isset($file_types)) {
     $file_types = [];
 }
 
-use \OSS\OssClient;
-use \OSS\Core\OssException;
 use Intervention\Image\ImageManager;
 
 $response = [
@@ -78,9 +76,18 @@ if (isset($_POST['filedata'])) {
                 'size_upload' => strlen($file_data),
                 'file_type' => $file_ext,
             ];
-            echo json_encode($response);
-            exit;
+            exit(json_encode($response));
         }
+        $folder = trim($up_folder);
+        $full_path = sprintf('%s/%s.%s', $folder, $file_name, $file_ext);
+        // 上传成功
+        mkdir($folder);
+        file_put_contents($full_path, $file_data);
+        $response['path'] = $full_path;
+        $response['size_upload'] = strlen($file_data);
+        $response['file_type'] = $src_file_ext;
+
+        exit(json_encode($response));
 
     } else {
         $response = [
@@ -89,8 +96,7 @@ if (isset($_POST['filedata'])) {
             'file_type' => $src_file_ext,
             'size_upload' => strlen($file_data)
         ];
-        echo json_encode($response);
-        exit;
+        exit(json_encode($response));
     }
 
 } else {
@@ -98,45 +104,8 @@ if (isset($_POST['filedata'])) {
         'status' => 'err',
         'message' => 'no data',
     ];
-    echo json_encode($response);
-    exit;
+    exit(json_encode($response));
 }
-
-
-$accessKeyId = "LTAItYZgeQvwSThi";
-$accessKeySecret = "tFtDfNRuDEKJRskikVRTtpNaclS1PL";
-$endpoint = "oss-cn-hangzhou.aliyuncs.com";
-$folder = trim($up_folder);
-try {
-    $ossClient = new OssClient($accessKeyId, $accessKeySecret, $endpoint);
-    $bucket = "mogo-static-files";
-    $object = sprintf('%s/%s.%s', $folder, $file_name, $file_ext);
-    $content = $file_data;
-    try {
-        $file_info = $ossClient->putObject($bucket, $object, $content);
-        $response['data'] = $file_info;
-        $response['path'] = $object;
-        $response['file_type'] = $src_file_ext;
-
-    } catch (OssException $e) {
-        $response = [
-            'status' => 'err',
-            'message' => $e->getMessage(),
-        ];
-        echo json_encode($response);
-        exit;
-    }
-} catch (OssException $e) {
-    $response = [
-        'status' => 'err',
-        'message' => $e->getMessage(),
-    ];
-    echo json_encode($response);
-    exit;
-}
-
-
-echo json_encode($response);
 
 
 /**
