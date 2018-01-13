@@ -62,7 +62,7 @@ if (isset($_POST['filedata'])) {
             $manager->make($file_data)->save($file_path, 90);
             $file_data = file_get_contents($file_path);
             $file_name = md5($file_data);
-            //@unlink($file_path);
+            @unlink($file_path);
         }
         // android包文件名不变
         if ($file_ext == 'apk' || $file_ext == 'json') {
@@ -81,7 +81,9 @@ if (isset($_POST['filedata'])) {
         $folder = trim($up_folder);
         $full_path = sprintf('%s/%s.%s', $folder, $file_name, $file_ext);
         // 上传成功
-        mkdir($folder);
+        if (!is_dir($folder)) {
+            mkdir($folder);
+        }
         file_put_contents($full_path, $file_data);
         $response['path'] = $full_path;
         $response['size_upload'] = strlen($file_data);
