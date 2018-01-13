@@ -62,7 +62,7 @@ if (isset($_POST['filedata'])) {
             $manager->make($file_data)->save($file_path, 90);
             $file_data = file_get_contents($file_path);
             $file_name = md5($file_data);
-            @unlink($file_path);
+            //@unlink($file_path);
         }
         // android包文件名不变
         if ($file_ext == 'apk' || $file_ext == 'json') {
