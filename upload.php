@@ -56,7 +56,6 @@ if (isset($_POST['filedata'])) {
 
         $file_data = base64_decode($file_data);
         $file_name = md5($file_data);
-        var_dump($file_name, $file_ext);exit;
         /*if ($allow_type == 'image/') {
             $file_path = sprintf('/tmp/%s_zip.%s', $file_name, $file_ext);
             $manager = new ImageManager(array('driver' => 'imagick'));
