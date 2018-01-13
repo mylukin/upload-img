@@ -56,14 +56,14 @@ if (isset($_POST['filedata'])) {
 
         $file_data = base64_decode($file_data);
         $file_name = md5($file_data);
-        /*if ($allow_type == 'image/') {
+        if ($allow_type == 'image/') {
             $file_path = sprintf('/tmp/%s_zip.%s', $file_name, $file_ext);
             $manager = new ImageManager(array('driver' => 'imagick'));
             $manager->make($file_data)->save($file_path, 90);
             $file_data = file_get_contents($file_path);
             $file_name = md5($file_data);
             //@unlink($file_path);
-        }*/
+        }
         // android包文件名不变
         if ($file_ext == 'apk' || $file_ext == 'json') {
             $file_name = basename($src_file_name, '.' . $file_ext);
